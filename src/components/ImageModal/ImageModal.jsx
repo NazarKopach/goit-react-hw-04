@@ -1,12 +1,18 @@
-function ImageModal({ image }) {
+import Modal from "react-modal";
+Modal.setAppElement("#root");
+
+function ImageModal({ isOpen, onClose, image, customStyles }) {
   return (
-    <div>
-      <img
-        src={image.urls.regular}
-        alt={image.alt_description}
-        style={{ width: "100%", height: "auto" }}
-      />
-    </div>
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onClose}
+      contentLabel="Image Modal"
+      style={customStyles}
+    >
+      <div>
+        <img src={image.urls.regular} alt={image.alt_description} />
+      </div>
+    </Modal>
   );
 }
 

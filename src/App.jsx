@@ -5,12 +5,10 @@ import { useEffect, useState } from "react";
 import Loader from "./components/Loader/Loader";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
-import Modal from "react-modal";
 import ImageModal from "./components/ImageModal/ImageModal";
-Modal.setAppElement("#root");
 
 function App() {
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState(null);
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState(false);
   const [searchValue, setSearchValue] = useState(null);
@@ -35,7 +33,6 @@ function App() {
         const { data } = await axios.get(
           `https://api.unsplash.com/search/photos?query=${searchValue}&page=${page}&client_id=LMF9x-i_SfE5T0Hve8YKUQz0rmCzzBTy3KzOwV93csA`
         );
-
         setTotalPages(data.total_pages);
 
         if (page !== 1) {
@@ -85,18 +82,17 @@ function App() {
       {loader && <Loader />}
       {error && <ErrorMessage />}
       <ImageGallery results={results} openModal={openModal} />
-      {results.length > 0 && page < totalPages && (
+      {results !== null && page < totalPages && (
         <LoadMoreBtn setPage={() => setPage((prev) => prev + 1)} />
       )}
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        style={customStyles}
-        contentLabel="Selected Image Modal"
-      >
-        {selectedImage && <ImageModal image={selectedImage} />}
-        <button onClick={closeModal}></button>
-      </Modal>
+      {selectedImage && (
+        <ImageModal
+          isOpen={modalIsOpen}
+          onClose={closeModal}
+          image={selectedImage}
+          customStyles={customStyles}
+        />
+      )}
     </>
   );
 }
